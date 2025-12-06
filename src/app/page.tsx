@@ -62,7 +62,7 @@ export default function Home() {
             SingStar Search
           </h1>
           <p className="text-gray-300 text-lg">
-            Finn dine favorittsanger fra SingStar-samlingen
+            Sanders SingStar Party
           </p>
         </div>
 

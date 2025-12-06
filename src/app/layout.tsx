@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SingStar Search",
-  description: "Search and browse SingStar tracks",
+  title: "SingStar Party",
+  description: "Sanders SingStar Party",
 };
 
 export default function RootLayout({
