@@ -11,6 +11,26 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGames, setSelectedGames] = useState<string[]>([]);
   const [selectedArtists, setSelectedArtists] = useState<string[]>([]);
+  const [titleClicks, setTitleClicks] = useState(0);
+
+  // Easter egg: Console log
+  React.useEffect(() => {
+    console.log(
+      '%c🥔 Psst! Leter du etter noe? Prøv å trykke på tittelen noen ganger... 🥔',
+      'color: #FFD700; font-size: 14px; font-weight: bold; background: #333; padding: 5px; border-radius: 5px;'
+    );
+  }, []);
+
+  // Easter egg: Click handler
+  const handleTitleClick = () => {
+    const newCount = titleClicks + 1;
+    setTitleClicks(newCount);
+
+    if (newCount === 5) {
+      alert('🥔 Gratulerer! 🥔\n\nHvis du fant denne må du si til Sander "Potet" så får du en premie!');
+      setTitleClicks(0);
+    }
+  };
 
   const games = useMemo(() => {
     const uniqueGames = new Set(tracks.map(t => t.game));
@@ -58,12 +78,12 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
-          <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary mb-4 drop-shadow-[0_0_15px_rgba(255,0,255,0.5)]">
-            SingStar Search
-          </h1>
-          <p className="text-gray-300 text-lg">
+          <h1
+            onClick={handleTitleClick}
+            className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary via-white to-secondary mb-4 drop-shadow-[0_0_15px_rgba(255,0,255,0.5)] cursor-default select-none transition-transform active:scale-95"
+          >
             Sanders SingStar Party
-          </p>
+          </h1>
         </div>
 
         <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 shadow-2xl border border-white/10 mb-8">
