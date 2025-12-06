@@ -1,5 +1,6 @@
 import React from 'react';
 import { Track } from '@/data/tracks';
+import { getArtistColor } from '@/utils/colors';
 
 interface TrackListProps {
     tracks: Track[];
@@ -20,7 +21,12 @@ export const TrackList: React.FC<TrackListProps> = ({ tracks }) => {
                         className="bg-white/5 border border-white/10 rounded-lg p-4 shadow-sm hover:bg-white/10 transition-colors"
                     >
                         <div className="font-bold text-white text-lg mb-1">{track.title}</div>
-                        <div className="text-primary font-medium mb-2">{track.artist}</div>
+                        <div
+                            className="font-medium mb-2"
+                            style={{ color: getArtistColor(track.artist) }}
+                        >
+                            {track.artist}
+                        </div>
                         <div className="text-xs text-gray-400 uppercase tracking-wider">{track.game}</div>
                     </div>
                 ))}
@@ -48,7 +54,11 @@ export const TrackList: React.FC<TrackListProps> = ({ tracks }) => {
                                 key={track.id}
                                 className="bg-black/20 border-b border-white/5 hover:bg-white/5 transition-colors"
                             >
-                                <th scope="row" className="px-6 py-4 font-medium text-white whitespace-nowrap">
+                                <th
+                                    scope="row"
+                                    className="px-6 py-4 font-medium whitespace-nowrap"
+                                    style={{ color: getArtistColor(track.artist) }}
+                                >
                                     {track.artist}
                                 </th>
                                 <td className="px-6 py-4 text-gray-200">

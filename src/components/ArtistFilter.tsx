@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { getArtistColor } from '@/utils/colors';
 
 interface ArtistFilterProps {
     artists: string[];
@@ -50,18 +51,24 @@ export const ArtistFilter: React.FC<ArtistFilterProps> = ({ artists, selectedArt
                         className="w-full px-4 py-2 mb-4 text-white bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary placeholder-gray-400"
                     />
                     <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto custom-scrollbar">
-                        {filteredArtists.map((artist) => (
-                            <button
-                                key={artist}
-                                onClick={() => onToggleArtist(artist)}
-                                className={`px-3 py-1 text-sm font-medium rounded-full border transition-all duration-300 ${selectedArtists.includes(artist)
-                                    ? 'bg-secondary text-black border-secondary shadow-[0_0_10px_rgba(0,255,255,0.5)]'
-                                    : 'bg-white/10 text-gray-300 border-white/20 hover:bg-white/20 hover:border-white/40 backdrop-blur-sm'
-                                    }`}
-                            >
-                                {artist}
-                            </button>
-                        ))}
+                        {filteredArtists.map((artist) => {
+                            const isSelected = selectedArtists.includes(artist);
+                            const artistColor = getArtistColor(artist);
+
+                            return (
+                                <button
+                                    key={artist}
+                                    onClick={() => onToggleArtist(artist)}
+                                    className={`px-3 py-1 text-sm font-medium rounded-full border transition-all duration-300 ${isSelected
+                                        ? 'bg-secondary text-black border-secondary shadow-[0_0_10px_rgba(0,255,255,0.5)]'
+                                        : 'bg-white/10 border-white/20 hover:bg-white/20 hover:border-white/40 backdrop-blur-sm'
+                                        }`}
+                                    style={!isSelected ? { color: artistColor, borderColor: artistColor } : {}}
+                                >
+                                    {artist}
+                                </button>
+                            );
+                        })}
                         {filteredArtists.length === 0 && (
                             <div className="text-gray-400 text-sm italic w-full text-center py-2">
                                 Ingen artister funnet
