@@ -12,9 +12,11 @@ export const ArtistFilter: React.FC<ArtistFilterProps> = ({ artists, selectedArt
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredArtists = useMemo(() => {
-        return artists.filter(artist =>
-            artist.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        return artists
+            .filter(artist =>
+                artist.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .sort((a, b) => a.localeCompare(b));
     }, [artists, searchQuery]);
 
     return (
