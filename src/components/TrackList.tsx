@@ -13,6 +13,11 @@ export const TrackList: React.FC<TrackListProps> = ({ tracks }) => {
 
     return (
         <div className="space-y-4">
+            {/* Song Counter */}
+            <div className="text-center text-gray-300 text-sm">
+                <span className="font-semibold text-white">{tracks.length}</span> {tracks.length === 1 ? 'sang' : 'sanger'} funnet
+            </div>
+            
             {/* Mobile View (Cards) */}
             <div className="md:hidden space-y-4">
                 {tracks.map((track) => (
