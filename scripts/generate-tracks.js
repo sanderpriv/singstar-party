@@ -1,37 +1,46 @@
 const fs = require('fs');
 const path = require('path');
 
-const csvPath = path.join(__dirname, '../src/data/singstar_tracks.csv');
+const gamesDir = path.join(__dirname, '../src/data/games');
 const tsPath = path.join(__dirname, '../src/data/tracks.ts');
 
-const content = fs.readFileSync(csvPath, 'utf-8');
-const lines = content.split('\n').filter(l => l.trim());
-
 const tracks = [];
+let trackIdCounter = 1;
 
-lines.forEach((line, index) => {
-    if (index === 0) return; // Header
+// Read all CSV files from games directory
+const files = fs.readdirSync(gamesDir).filter(f => f.endsWith('.csv'));
 
-    // Simple CSV parser for quoted fields
-    // This regex matches quoted fields: "..."
-    // It assumes the file is well-formed with quotes around all fields
-    const parts = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+files.forEach(file => {
+    const gameName = file.replace('.csv', '');
+    const csvPath = path.join(gamesDir, file);
+    const content = fs.readFileSync(csvPath, 'utf-8');
+    const lines = content.split('\n').filter(l => l.trim());
 
-    if (!parts || parts.length < 4) {
-        console.warn(`Line ${index + 1}: Invalid format. Skipping.`);
-        return;
-    }
+    lines.forEach((line, index) => {
+        if (index === 0) return; // Skip header
 
-    // Remove quotes
-    const cleanParts = parts.map(p => p.replace(/^"|"$/g, ''));
+        // Parse CSV line (artist,title,year)
+        const parts = line.split(',');
+        
+        if (parts.length < 3) {
+            return; // Skip invalid lines
+        }
 
-    const [game, region, artist, title] = cleanParts;
+        const artist = parts[0].trim();
+        const title = parts.slice(1, -1).join(',').trim(); // Handle commas in titles
+        const year = parseInt(parts[parts.length - 1].trim());
 
-    tracks.push({
-        id: String(index),
-        artist,
-        title,
-        game
+        if (!artist || !title || !year) {
+            return; // Skip empty lines
+        }
+
+        tracks.push({
+            id: String(trackIdCounter++),
+            artist,
+            title,
+            year,
+            game: gameName
+        });
     });
 });
 
@@ -39,12 +48,23 @@ const fileContent = `export interface Track {
   id: string;
   artist: string;
   title: string;
+  year: number;
   game: string;
 }
 
+export interface Game {
+  id: string;
+  title: string;
+  region: string;
+  releaseYear: number;
+  tracks: Track[];
+}
+
 export const tracks: Track[] = ${JSON.stringify(tracks, null, 2)};
+
+export const games: Game[] = [];
 `;
 
 fs.writeFileSync(tsPath, fileContent);
 
-console.log(`Generated ${tracks.length} tracks to ${tsPath}`);
+console.log(`Generated ${tracks.length} tracks from ${files.length} game files to ${tsPath}`);
